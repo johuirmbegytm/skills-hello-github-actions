@@ -37,3 +37,64 @@ Get help: [Post in our discussion board](https://github.com/orgs/skills/discussi
 &copy; 2023 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
 
 </footer>
+
+# Лабораторна-практична робота №10
+
+## Тема:
+
+Створення та запуск GitHub Actions workflow
+
+## Мета:
+
+Навчитися створювати файли робочих процесів (workflows) у GitHub Actions, налаштовувати тригери, завдання та кроки для автоматизації дій у репозиторії.
+
+### Хід роботи:
+
+#### 1.	Підготовка репозиторію
+
+Для початку роботи було створено новий публічний репозиторій на основі навчального шаблону `skills/hello-github-actions.`
+
+>![placeholder](https://github.com/johuirmbegytm/skills-hello-github-actions/blob/main/images/1.png?raw=true)
+
+#### 2.	Створення файлу робочого процесу (Step 1-3)
+
+Згідно з інструкціями курсу, у гілці `welcome-workflow` було створено файл конфігурації .`github/workflows/welcome.yml`. Цей файл описує автоматизацію, яка спрацьовує при відкритті нового `Pull Request`.
+
+Вміст файлу `welcome.yml`:
+
+```bash
+name: Post welcome comment
+on:
+  pull_request:
+    types: [opened]
+permissions:
+  pull-requests: write
+jobs:
+  build:
+    name: Post welcome comment
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh pr comment $PR_URL --body "Welcome to the repository!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+```
+
+#### 3.	Злиття змін (Step 4)
+
+Після успішної перевірки створеного `workflow-файлу` було виконано злиття (`merge`) гілки `welcome-workflow` в основну гілку `main`. Це зробило автоматизацію активною для всього репозиторію.
+
+#### 4.	Перевірка роботи автоматизації (Step 5)
+
+Для тестування фінального результату було виконано наступні дії:
+Створюємо нову гілку `test-workflow`.
+
+>![placeholder](https://github.com/johuirmbegytm/skills-hello-github-actions/blob/main/images/2.png?raw=true)
+
+Вносимо зміни у файл `README.md` (додано емодзі `🎉`).
+
+>![placeholder](https://github.com/johuirmbegytm/skills-hello-github-actions/blob/main/images/3.png?raw=true)
+
+Відкрито новий `Pull Request` до гілки `main`.
+
+GitHub Actions автоматично виявив новий `Pull Request` і запустив створений нами скрипт. Бот `github-actions` миттєво залишив коментар "Welcome to the repository!" у обговоренні запиту.
